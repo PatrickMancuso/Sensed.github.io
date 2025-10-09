@@ -1,12 +1,9 @@
-// Last.fm API key
 const API_KEY = "e530c016b028fa384b92183344f7526e";
 
-// Elements
 const form = document.getElementById("searchForm");
 const input = document.getElementById("songInput");
 const resultsDiv = document.getElementById("results");
 
-// Handle form submit
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const query = input.value.trim();
@@ -15,7 +12,6 @@ form.addEventListener("submit", async (e) => {
   resultsDiv.innerHTML = "<p>Loading...</p>";
 
   try {
-    // Fetch songs from Last.fm
     const response = await fetch(
       `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(
         query
@@ -29,29 +25,30 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-// Render results
 function displayResults(data) {
-  if (!data.results || !data.results.trackmatches.track.length) {
+  const tracks = data.results?.trackmatches?.track || [];
+
+  if (!tracks.length) {
     resultsDiv.innerHTML = "<p>No results found.</p>";
     return;
   }
 
-  const tracks = data.results.trackmatches.track;
   resultsDiv.innerHTML = "";
 
   tracks.forEach((track) => {
+    const imageUrl =
+      track.image?.[2]?.["#text"] ||
+      "https://via.placeholder.com/80x80?text=No+Art";
+
     const item = document.createElement("div");
     item.classList.add("track");
     item.innerHTML = `
-      <h3>${track.name} — ${track.artist}</h3>
-      ${
-        track.image[1]["#text"]
-          ? `<img src="${track.image[1]["#text"]}" alt="Album Art">`
-          : ""
-      }
-      <p><a href="${track.url}" target="_blank">View on Last.fm</a></p>
+      <img src="${imageUrl}" alt="Album Art">
+      <div>
+        <h3>${track.name} — ${track.artist}</h3>
+        <p><a href="${track.url}" target="_blank">View on Last.fm</a></p>
+      </div>
     `;
     resultsDiv.appendChild(item);
   });
 }
-
