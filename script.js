@@ -52,3 +52,42 @@ function displayResults(data) {
     resultsDiv.appendChild(item);
   });
 }
+
+
+// Tab switching
+const tabs = document.querySelectorAll(".tab");
+const tabContents = document.querySelectorAll(".tab-content");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const target = tab.dataset.tab;
+    tabContents.forEach(content => {
+      content.classList.toggle("active", content.id === target);
+    });
+  });
+});
+
+// Journal handling
+const journalForm = document.getElementById("journalForm");
+const journalEntries = document.getElementById("journalEntries");
+
+journalForm?.addEventListener("submit", e => {
+  e.preventDefault();
+  const song = document.getElementById("songTitle").value;
+  const reflection = document.getElementById("reflection").value;
+  const color = document.getElementById("color").value;
+
+  const entry = document.createElement("div");
+  entry.classList.add("entry");
+  entry.innerHTML = `
+    <h3 style="color:${color}">${song}</h3>
+    <p>${reflection}</p>
+  `;
+  journalEntries.prepend(entry);
+
+  journalForm.reset();
+});
+
