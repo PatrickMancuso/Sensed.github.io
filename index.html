@@ -12,23 +12,50 @@
       <h1>Sensed</h1>
       <p class="subtitle">Where music meets memory, color, and emotion.</p>
     </div>
+    <nav>
+      <button class="tab active" data-tab="search">Search</button>
+      <button class="tab" data-tab="journal">Journal</button>
+      <button class="tab" data-tab="community">Community</button>
+      <button class="tab" data-tab="profile">Profile</button>
+    </nav>
   </header>
 
   <main>
-    <section id="welcome">
-      <h2>Search for a song and reflect on how it makes you feel. Each track tells a story.</h2>
-
-      <!-- Search form -->
+    <!-- Search Tab -->
+    <section id="search" class="tab-content active">
+      <h2>Search for a song and reflect on how it makes you feel.</h2>
       <form id="searchForm">
         <input type="text" id="songInput" placeholder="Search for a song or artist..." required />
         <button type="submit">🔍</button>
       </form>
+      <div id="results"></div>
     </section>
 
-    <!-- Results Section -->
-    <section id="resultsSection">
-      <h3>Results</h3>
-      <div id="results"></div>
+    <!-- Journal Tab -->
+    <section id="journal" class="tab-content">
+      <h2>Log your feelings</h2>
+      <form id="journalForm">
+        <input type="text" id="songTitle" placeholder="Song Title" required />
+        <textarea id="reflection" placeholder="How does this song make you feel?" required></textarea>
+        <label for="color">Pick a color that fits:</label>
+        <input type="color" id="color" value="#a78bfa" />
+        <button type="submit">Save Entry</button>
+      </form>
+      <div id="journalEntries"></div>
+    </section>
+
+    <!-- Community Tab -->
+    <section id="community" class="tab-content">
+      <h2>Community Feed</h2>
+      <div id="communityFeed">
+        <p>Coming soon — see what others feel about their favorite songs.</p>
+      </div>
+    </section>
+
+    <!-- Profile Tab -->
+    <section id="profile" class="tab-content">
+      <h2>Your Profile</h2>
+      <p>Feature in progress. Customize your space soon!</p>
     </section>
   </main>
 
