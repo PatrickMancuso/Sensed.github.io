@@ -1,10 +1,12 @@
 const API_KEY = "e530c016b028fa384b92183344f7526e";
 
+// Grab main elements
 const form = document.getElementById("searchForm");
 const input = document.getElementById("songInput");
 const searchType = document.getElementById("searchType");
 const resultsDiv = document.getElementById("results");
 
+// =================== SEARCH HANDLING ===================
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const query = input.value.trim();
@@ -23,7 +25,6 @@ form.addEventListener("submit", async (e) => {
     resultsDiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
   }
 });
-
 
 // =================== ALBUM SEARCH ===================
 async function searchAlbums(query) {
@@ -58,7 +59,7 @@ async function displayAlbums(albums) {
   }
 
   for (const album of albums) {
-    // show small image first
+    // show small/medium image first
     let imageUrl =
       album.image?.[2]?.["#text"] ||
       "https://via.placeholder.com/300x300?text=No+Art";
@@ -66,7 +67,7 @@ async function displayAlbums(albums) {
     const item = document.createElement("div");
     item.classList.add("track");
     item.innerHTML = `
-      <img src="${imageUrl}" alt="Album Art" data-artist="${album.artist}" data-album="${album.name}">
+      <img src="${imageUrl}" alt="Album Art">
       <div>
         <h3>${album.name} — ${album.artist}</h3>
         <p><a href="${album.url}" target="_blank">View on Last.fm</a></p>
@@ -74,7 +75,7 @@ async function displayAlbums(albums) {
     `;
     resultsDiv.appendChild(item);
 
-    // Fetch high-res image asynchronously and replace
+    // Upgrade to high-res if available
     fetchHighResAlbumArt(album.artist, album.name).then((highRes) => {
       if (highRes) {
         const img = item.querySelector("img");
@@ -98,7 +99,7 @@ async function displayTracks(tracks) {
     const item = document.createElement("div");
     item.classList.add("track");
     item.innerHTML = `
-      <img src="${imageUrl}" alt="Artist Image" data-artist="${track.artist}" data-track="${track.name}">
+      <img src="${imageUrl}" alt="Artist Image">
       <div>
         <h3>${track.name} — ${track.artist}</h3>
         <p><a href="${track.url}" target="_blank">View on Last.fm</a></p>
@@ -106,14 +107,10 @@ async function displayTracks(tracks) {
     `;
     resultsDiv.appendChild(item);
 
-    // Fetch artist image asynchronously and replace
+    // Fetch artist image asynchronously
     fetchArtistImage(track.artist).then((artistImg) => {
-      if (artistImg) {
-        const img = item.querySelector("img");
-        img.src = artistImg;
-      } else {
-        img.src = "https://via.placeholder.com/300x300?text=No+Image";
-      }
+      const img = item.querySelector("img");
+      img.src = artistImg || "https://via.placeholder.com/300x300?text=No+Image";
     });
   }
 }
@@ -147,3 +144,41 @@ async function fetchArtistImage(artist) {
     return "";
   }
 }
+
+// =================== TAB SWITCHING ===================
+const tabs = document.querySelectorAll(".tab");
+const tabContents = document.querySelectorAll(".tab-content");
+
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    // deactivate all tabs
+    tabs.forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const target = tab.dataset.tab;
+    tabContents.forEach((content) => {
+      content.classList.toggle("active", content.id === target);
+    });
+  });
+});
+
+// =================== JOURNAL HANDLING ===================
+const journalForm = document.getElementById("journalForm");
+const journalEntries = document.getElementById("journalEntries");
+
+journalForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const song = document.getElementById("songTitle").value;
+  const reflection = document.getElementById("reflection").value;
+  const color = document.getElementById("color").value;
+
+  const entry = document.createElement("div");
+  entry.classList.add("entry");
+  entry.innerHTML = `
+    <h3 style="color:${color}">${song}</h3>
+    <p>${reflection}</p>
+  `;
+  journalEntries.prepend(entry);
+
+  journalForm.reset();
+});
