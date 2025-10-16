@@ -59,8 +59,8 @@ async function displayAlbums(albums) {
   }
 
   for (const album of albums) {
-    // show small/medium image first
     let imageUrl =
+      album.image?.[3]?.["#text"] ||
       album.image?.[2]?.["#text"] ||
       "https://via.placeholder.com/300x300?text=No+Art";
 
@@ -75,12 +75,9 @@ async function displayAlbums(albums) {
     `;
     resultsDiv.appendChild(item);
 
-    // Upgrade to high-res if available
+    // Try to replace with higher-quality album art if possible
     fetchHighResAlbumArt(album.artist, album.name).then((highRes) => {
-      if (highRes) {
-        const img = item.querySelector("img");
-        img.src = highRes;
-      }
+      if (highRes) item.querySelector("img").src = highRes;
     });
   }
 }
@@ -94,12 +91,10 @@ async function displayTracks(tracks) {
   }
 
   for (const track of tracks) {
-    // show placeholder first
-    let imageUrl = "https://via.placeholder.com/300x300?text=Loading...";
     const item = document.createElement("div");
     item.classList.add("track");
     item.innerHTML = `
-      <img src="${imageUrl}" alt="Artist Image">
+      <img src="https://via.placeholder.com/300x300?text=Loading..." alt="Artist Image">
       <div>
         <h3>${track.name} — ${track.artist}</h3>
         <p><a href="${track.url}" target="_blank">View on Last.fm</a></p>
@@ -107,10 +102,11 @@ async function displayTracks(tracks) {
     `;
     resultsDiv.appendChild(item);
 
-    // Fetch artist image asynchronously
+    // Fetch artist image (instead of album art)
     fetchArtistImage(track.artist).then((artistImg) => {
       const img = item.querySelector("img");
-      img.src = artistImg || "https://via.placeholder.com/300x300?text=No+Image";
+      img.src =
+        artistImg || "https://via.placeholder.com/300x300?text=No+Image";
     });
   }
 }
@@ -119,9 +115,9 @@ async function displayTracks(tracks) {
 async function fetchHighResAlbumArt(artist, album) {
   try {
     const res = await fetch(
-      `https://ws.audioscrobbler.com/2.0/?method=album.getInfo&api_key=${API_KEY}&artist=${encodeURIComponent(
+      `https://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=${encodeURIComponent(
         artist
-      )}&album=${encodeURIComponent(album)}&format=json`
+      )}&album=${encodeURIComponent(album)}&api_key=${API_KEY}&format=json`
     );
     const data = await res.json();
     return data.album?.image?.[4]?.["#text"] || "";
@@ -151,7 +147,6 @@ const tabContents = document.querySelectorAll(".tab-content");
 
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
-    // deactivate all tabs
     tabs.forEach((t) => t.classList.remove("active"));
     tab.classList.add("active");
 
