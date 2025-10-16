@@ -35,14 +35,18 @@
       <section id="search" class="tab-content active">
         <h2>Search for a song and reflect on how it makes you feel.</h2>
         <form id="searchForm">
-          <input
-            type="text"
-            id="songInput"
-            placeholder="Search for a song or artist..."
-            required
-          />
-          <button type="submit">🔍</button>
-        </form>
+  <select id="searchType">
+    <option value="track">Songs</option>
+    <option value="album">Albums</option>
+  </select>
+  <input
+    type="text"
+    id="songInput"
+    placeholder="Search for a song or album..."
+    required
+  />
+  <button type="submit">🔍</button>
+</form>
         <div id="results"></div>
       </section>
 
