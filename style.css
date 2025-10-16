@@ -5,9 +5,12 @@
   box-sizing: border-box;
 }
 
+/* ====== BACKGROUND ANIMATION ====== */
 body {
   font-family: "Inter", Arial, sans-serif;
-  background: radial-gradient(circle at top left, #1a1a2e, #121212);
+  background: linear-gradient(135deg, #1a1a2e, #121212, #26264d);
+  background-size: 400% 400%;
+  animation: colorShift 20s ease infinite;
   color: #f1f1f1;
   display: flex;
   flex-direction: column;
@@ -16,9 +19,17 @@ body {
   padding: 1rem;
 }
 
+@keyframes colorShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ====== LAYOUT STRUCTURE ====== */
 header {
   text-align: center;
   margin-bottom: 1rem;
+  z-index: 10;
 }
 
 .logo h1 {
@@ -35,31 +46,54 @@ header {
   letter-spacing: 0.5px;
 }
 
+/* Expanded main area */
 main {
-  width: 90%;
-  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 95%;
+  max-width: 1200px;
+  min-height: 70vh;
   background: rgba(255, 255, 255, 0.06);
   border-radius: 14px;
   padding: 2rem;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 5;
 }
 
-#welcome {
+/* ====== SIDE PANELS ====== */
+.side-panel {
+  width: 18%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.03);
+  min-height: 65vh;
+  backdrop-filter: blur(6px);
+}
+
+.side-panel h3 {
+  font-size: 1rem;
+  color: #c3bfff;
+  margin-bottom: 0.8rem;
   text-align: center;
-  margin-bottom: 0.7rem;
 }
 
-#welcome h2 {
-  color: #bdbdff;
-  margin-bottom: 0.5rem;
+.side-panel p {
+  font-size: 0.9rem;
+  color: #aaa;
+  text-align: center;
 }
 
-#welcome p {
-  font-size: 0.6rem;
-  color: #d0d0d0;
+/* ====== CENTER CONTENT ====== */
+.content-area {
+  flex: 1;
+  margin: 0 1.5rem;
 }
 
+/* ====== SEARCH FORM ====== */
 #searchForm {
   display: flex;
   justify-content: center;
@@ -90,41 +124,41 @@ main {
   opacity: 0.85;
 }
 
-#resultsSection {
+/* ====== SEARCH RESULTS (more visual) ====== */
+#results {
   margin-top: 2rem;
-}
-
-#resultsSection h3 {
-  color: #b0b0ff;
-  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
 }
 
 .track {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  transition: background 0.3s;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
 .track:hover {
-  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .track img {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
-  flex-shrink: 0;
+}
+
+.track div {
+  padding: 0.8rem 1rem;
 }
 
 .track h3 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin-bottom: 0.3rem;
+  color: #e0e0ff;
 }
 
 .track a {
@@ -136,43 +170,7 @@ main {
   text-decoration: underline;
 }
 
-footer {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #777;
-  margin-top: auto;
-  padding: 1rem;
-}
-
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-nav .tab {
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-nav .tab.active, nav .tab:hover {
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
+/* ====== JOURNAL FORM ====== */
 #journalForm {
   display: flex;
   flex-direction: column;
@@ -202,3 +200,42 @@ nav .tab.active, nav .tab:hover {
   margin-bottom: 1rem;
 }
 
+/* ====== NAVIGATION ====== */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+nav .tab {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+nav .tab.active,
+nav .tab:hover {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ====== FOOTER ====== */
+footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: auto;
+  padding: 1rem;
+}
