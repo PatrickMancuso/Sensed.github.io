@@ -21,6 +21,7 @@ form.addEventListener("submit", async (e) => {
     } else {
       await searchTracks(query);
     }
+    showClearButton();
   } catch (err) {
     resultsDiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
   }
@@ -31,10 +32,10 @@ async function searchAlbums(query) {
   const res = await fetch(
     `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${encodeURIComponent(
       query
-    )}&api_key=${API_KEY}&format=json`
+    )}&api_key=${API_KEY}&format=json&limit=10`
   );
   const data = await res.json();
-  const albums = data.results?.albummatches?.album || [];
+  const albums = data.results?.albummatches?.album?.slice(0, 10) || [];
   displayAlbums(albums);
 }
 
@@ -43,10 +44,10 @@ async function searchTracks(query) {
   const res = await fetch(
     `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(
       query
-    )}&api_key=${API_KEY}&format=json`
+    )}&api_key=${API_KEY}&format=json&limit=10`
   );
   const data = await res.json();
-  const tracks = data.results?.trackmatches?.track || [];
+  const tracks = data.results?.trackmatches?.track?.slice(0, 10) || [];
   displayTracks(tracks);
 }
 
@@ -60,7 +61,6 @@ async function displayAlbums(albums) {
 
   for (const album of albums) {
     let imageUrl =
-      album.image?.[3]?.["#text"] ||
       album.image?.[2]?.["#text"] ||
       "https://via.placeholder.com/300x300?text=No+Art";
 
@@ -75,7 +75,7 @@ async function displayAlbums(albums) {
     `;
     resultsDiv.appendChild(item);
 
-    // Try to replace with higher-quality album art if possible
+    // Try to replace with higher quality
     fetchHighResAlbumArt(album.artist, album.name).then((highRes) => {
       if (highRes) item.querySelector("img").src = highRes;
     });
@@ -102,11 +102,12 @@ async function displayTracks(tracks) {
     `;
     resultsDiv.appendChild(item);
 
-    // Fetch artist image (instead of album art)
+    // Fetch artist image and replace placeholder
     fetchArtistImage(track.artist).then((artistImg) => {
       const img = item.querySelector("img");
       img.src =
-        artistImg || "https://via.placeholder.com/300x300?text=No+Image";
+        artistImg ||
+        "https://via.placeholder.com/300x300?text=No+Image";
     });
   }
 }
@@ -115,12 +116,16 @@ async function displayTracks(tracks) {
 async function fetchHighResAlbumArt(artist, album) {
   try {
     const res = await fetch(
-      `https://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=${encodeURIComponent(
+      `https://ws.audioscrobbler.com/2.0/?method=album.getInfo&api_key=${API_KEY}&artist=${encodeURIComponent(
         artist
-      )}&album=${encodeURIComponent(album)}&api_key=${API_KEY}&format=json`
+      )}&album=${encodeURIComponent(album)}&format=json`
     );
     const data = await res.json();
-    return data.album?.image?.[4]?.["#text"] || "";
+    return (
+      data.album?.image?.[4]?.["#text"] ||
+      data.album?.image?.[3]?.["#text"] ||
+      ""
+    );
   } catch {
     return "";
   }
@@ -135,45 +140,36 @@ async function fetchArtistImage(artist) {
       )}&api_key=${API_KEY}&format=json`
     );
     const data = await res.json();
-    return data.artist?.image?.[4]?.["#text"] || "";
+    return (
+      data.artist?.image?.[4]?.["#text"] ||
+      data.artist?.image?.[3]?.["#text"] ||
+      ""
+    );
   } catch {
     return "";
   }
 }
 
-// =================== TAB SWITCHING ===================
-const tabs = document.querySelectorAll(".tab");
-const tabContents = document.querySelectorAll(".tab-content");
-
-tabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    tabs.forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
-
-    const target = tab.dataset.tab;
-    tabContents.forEach((content) => {
-      content.classList.toggle("active", content.id === target);
-    });
-  });
-});
-
-// =================== JOURNAL HANDLING ===================
-const journalForm = document.getElementById("journalForm");
-const journalEntries = document.getElementById("journalEntries");
-
-journalForm?.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const song = document.getElementById("songTitle").value;
-  const reflection = document.getElementById("reflection").value;
-  const color = document.getElementById("color").value;
-
-  const entry = document.createElement("div");
-  entry.classList.add("entry");
-  entry.innerHTML = `
-    <h3 style="color:${color}">${song}</h3>
-    <p>${reflection}</p>
+// =================== CLEAR RESULTS ===================
+function showClearButton() {
+  if (document.getElementById("clearBtn")) return;
+  const clearBtn = document.createElement("button");
+  clearBtn.id = "clearBtn";
+  clearBtn.textContent = "Clear Results";
+  clearBtn.style.cssText = `
+    margin-top: 1rem;
+    padding: 0.7rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #8b5cf6, #6366f1);
+    color: white;
+    cursor: pointer;
   `;
-  journalEntries.prepend(entry);
+  resultsDiv.insertAdjacentElement("beforebegin", clearBtn);
 
-  journalForm.reset();
-});
+  clearBtn.addEventListener("click", () => {
+    resultsDiv.innerHTML = "";
+    clearBtn.remove();
+    input.value = "";
+  });
+}
