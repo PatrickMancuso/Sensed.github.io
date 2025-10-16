@@ -78,6 +78,56 @@ nav .tab:hover {
   background: linear-gradient(90deg, #6366f1, #8b5cf6);
 }
 
+/* ======== FLATTENED TOP BAR ======== */
+.top-bar {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.top-bar .logo h1 {
+  font-size: 1.8rem;
+  background: linear-gradient(90deg, #a78bfa, #7dd3fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+/* Adjust nav for inline header */
+.top-bar nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.top-bar .tab {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  color: #f0f0ff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.top-bar .tab:hover {
+  transform: translateY(-1px);
+}
+
+.top-bar .tab.active {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+
 /* =========================================
    MAIN LAYOUT
 ========================================= */
