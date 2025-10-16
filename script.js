@@ -36,9 +36,10 @@ function displayResults(data) {
   resultsDiv.innerHTML = "";
 
   tracks.forEach((track) => {
+    // Find the first available image URL
     const imageUrl =
-      track.image?.[2]?.["#text"] ||
-      "https://via.placeholder.com/80x80?text=No+Art";
+      (track.image?.find((img) => img["#text"])?.["#text"]) ||
+      "https://via.placeholder.com/200x200?text=No+Art";
 
     const item = document.createElement("div");
     item.classList.add("track");
@@ -52,6 +53,8 @@ function displayResults(data) {
     resultsDiv.appendChild(item);
   });
 }
+
+
 
 
 // Tab switching
