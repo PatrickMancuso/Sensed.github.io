@@ -8,7 +8,7 @@ const resultsDiv = document.getElementById("results");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const query = input.value.trim();
-  const type = searchType.value; // "track" or "album"
+  const type = searchType.value;
   if (!query) return;
 
   resultsDiv.innerHTML = "<p>Loading...</p>";
@@ -24,7 +24,8 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-//  Album search
+
+// =================== ALBUM SEARCH ===================
 async function searchAlbums(query) {
   const res = await fetch(
     `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${encodeURIComponent(
@@ -36,7 +37,7 @@ async function searchAlbums(query) {
   displayAlbums(albums);
 }
 
-// 🔹 Song search
+// =================== TRACK SEARCH ===================
 async function searchTracks(query) {
   const res = await fetch(
     `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(
@@ -48,33 +49,42 @@ async function searchTracks(query) {
   displayTracks(tracks);
 }
 
-// 🖼 Display albums
-function displayAlbums(albums) {
+// =================== DISPLAY ALBUMS ===================
+async function displayAlbums(albums) {
   resultsDiv.innerHTML = "";
   if (!albums.length) {
     resultsDiv.innerHTML = "<p>No albums found.</p>";
     return;
   }
 
-  albums.forEach((album) => {
-    const imageUrl =
-      album.image?.find((img) => img["#text"])?.["#text"] ||
-      "https://via.placeholder.com/200x200?text=No+Art";
+  for (const album of albums) {
+    // show small image first
+    let imageUrl =
+      album.image?.[2]?.["#text"] ||
+      "https://via.placeholder.com/300x300?text=No+Art";
 
     const item = document.createElement("div");
     item.classList.add("track");
     item.innerHTML = `
-      <img src="${imageUrl}" alt="Album Art">
+      <img src="${imageUrl}" alt="Album Art" data-artist="${album.artist}" data-album="${album.name}">
       <div>
         <h3>${album.name} — ${album.artist}</h3>
         <p><a href="${album.url}" target="_blank">View on Last.fm</a></p>
       </div>
     `;
     resultsDiv.appendChild(item);
-  });
+
+    // Fetch high-res image asynchronously and replace
+    fetchHighResAlbumArt(album.artist, album.name).then((highRes) => {
+      if (highRes) {
+        const img = item.querySelector("img");
+        img.src = highRes;
+      }
+    });
+  }
 }
 
-// 🎤 Display tracks with artist images
+// =================== DISPLAY TRACKS ===================
 async function displayTracks(tracks) {
   resultsDiv.innerHTML = "";
   if (!tracks.length) {
@@ -83,23 +93,47 @@ async function displayTracks(tracks) {
   }
 
   for (const track of tracks) {
-    const artistImage = await fetchArtistImage(track.artist);
+    // show placeholder first
+    let imageUrl = "https://via.placeholder.com/300x300?text=Loading...";
     const item = document.createElement("div");
     item.classList.add("track");
     item.innerHTML = `
-      <img src="${
-        artistImage || "https://via.placeholder.com/200x200?text=No+Artist+Image"
-      }" alt="Artist Image">
+      <img src="${imageUrl}" alt="Artist Image" data-artist="${track.artist}" data-track="${track.name}">
       <div>
         <h3>${track.name} — ${track.artist}</h3>
         <p><a href="${track.url}" target="_blank">View on Last.fm</a></p>
       </div>
     `;
     resultsDiv.appendChild(item);
+
+    // Fetch artist image asynchronously and replace
+    fetchArtistImage(track.artist).then((artistImg) => {
+      if (artistImg) {
+        const img = item.querySelector("img");
+        img.src = artistImg;
+      } else {
+        img.src = "https://via.placeholder.com/300x300?text=No+Image";
+      }
+    });
   }
 }
 
-// 📸 Fetch artist image
+// =================== FETCH HIGH-RES ALBUM ART ===================
+async function fetchHighResAlbumArt(artist, album) {
+  try {
+    const res = await fetch(
+      `https://ws.audioscrobbler.com/2.0/?method=album.getInfo&api_key=${API_KEY}&artist=${encodeURIComponent(
+        artist
+      )}&album=${encodeURIComponent(album)}&format=json`
+    );
+    const data = await res.json();
+    return data.album?.image?.[4]?.["#text"] || "";
+  } catch {
+    return "";
+  }
+}
+
+// =================== FETCH ARTIST IMAGE ===================
 async function fetchArtistImage(artist) {
   try {
     const res = await fetch(
@@ -108,7 +142,7 @@ async function fetchArtistImage(artist) {
       )}&api_key=${API_KEY}&format=json`
     );
     const data = await res.json();
-    return data.artist?.image?.find((img) => img["#text"])?.["#text"] || "";
+    return data.artist?.image?.[4]?.["#text"] || "";
   } catch {
     return "";
   }
