@@ -21,7 +21,6 @@ form.addEventListener("submit", async (e) => {
     } else {
       await searchTracks(query);
     }
-    showClearButton();
   } catch (err) {
     resultsDiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
   }
@@ -32,10 +31,10 @@ async function searchAlbums(query) {
   const res = await fetch(
     `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${encodeURIComponent(
       query
-    )}&api_key=${API_KEY}&format=json&limit=10`
+    )}&api_key=${API_KEY}&format=json`
   );
   const data = await res.json();
-  const albums = data.results?.albummatches?.album?.slice(0, 10) || [];
+  const albums = data.results?.albummatches?.album || [];
   displayAlbums(albums);
 }
 
@@ -44,10 +43,10 @@ async function searchTracks(query) {
   const res = await fetch(
     `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(
       query
-    )}&api_key=${API_KEY}&format=json&limit=10`
+    )}&api_key=${API_KEY}&format=json`
   );
   const data = await res.json();
-  const tracks = data.results?.trackmatches?.track?.slice(0, 10) || [];
+  const tracks = data.results?.trackmatches?.track || [];
   displayTracks(tracks);
 }
 
@@ -60,6 +59,7 @@ async function displayAlbums(albums) {
   }
 
   for (const album of albums) {
+    // show small/medium image first
     let imageUrl =
       album.image?.[2]?.["#text"] ||
       "https://via.placeholder.com/300x300?text=No+Art";
@@ -75,9 +75,12 @@ async function displayAlbums(albums) {
     `;
     resultsDiv.appendChild(item);
 
-    // Try to replace with higher quality
+    // Upgrade to high-res if available
     fetchHighResAlbumArt(album.artist, album.name).then((highRes) => {
-      if (highRes) item.querySelector("img").src = highRes;
+      if (highRes) {
+        const img = item.querySelector("img");
+        img.src = highRes;
+      }
     });
   }
 }
@@ -91,10 +94,12 @@ async function displayTracks(tracks) {
   }
 
   for (const track of tracks) {
+    // show placeholder first
+    let imageUrl = "https://via.placeholder.com/300x300?text=Loading...";
     const item = document.createElement("div");
     item.classList.add("track");
     item.innerHTML = `
-      <img src="https://via.placeholder.com/300x300?text=Loading..." alt="Artist Image">
+      <img src="${imageUrl}" alt="Artist Image">
       <div>
         <h3>${track.name} — ${track.artist}</h3>
         <p><a href="${track.url}" target="_blank">View on Last.fm</a></p>
@@ -102,12 +107,10 @@ async function displayTracks(tracks) {
     `;
     resultsDiv.appendChild(item);
 
-    // Fetch artist image and replace placeholder
+    // Fetch artist image asynchronously
     fetchArtistImage(track.artist).then((artistImg) => {
       const img = item.querySelector("img");
-      img.src =
-        artistImg ||
-        "https://via.placeholder.com/300x300?text=No+Image";
+      img.src = artistImg || "https://via.placeholder.com/300x300?text=No+Image";
     });
   }
 }
@@ -121,11 +124,7 @@ async function fetchHighResAlbumArt(artist, album) {
       )}&album=${encodeURIComponent(album)}&format=json`
     );
     const data = await res.json();
-    return (
-      data.album?.image?.[4]?.["#text"] ||
-      data.album?.image?.[3]?.["#text"] ||
-      ""
-    );
+    return data.album?.image?.[4]?.["#text"] || "";
   } catch {
     return "";
   }
@@ -140,15 +139,50 @@ async function fetchArtistImage(artist) {
       )}&api_key=${API_KEY}&format=json`
     );
     const data = await res.json();
-    return (
-      data.artist?.image?.[4]?.["#text"] ||
-      data.artist?.image?.[3]?.["#text"] ||
-      ""
-    );
+    return data.artist?.image?.[4]?.["#text"] || "";
   } catch {
     return "";
   }
 }
+
+// =================== TAB SWITCHING ===================
+const tabs = document.querySelectorAll(".tab");
+const tabContents = document.querySelectorAll(".tab-content");
+
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    // deactivate all tabs
+    tabs.forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const target = tab.dataset.tab;
+    tabContents.forEach((content) => {
+      content.classList.toggle("active", content.id === target);
+    });
+  });
+});
+
+// =================== JOURNAL HANDLING ===================
+const journalForm = document.getElementById("journalForm");
+const journalEntries = document.getElementById("journalEntries");
+
+journalForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const song = document.getElementById("songTitle").value;
+  const reflection = document.getElementById("reflection").value;
+  const color = document.getElementById("color").value;
+
+  const entry = document.createElement("div");
+  entry.classList.add("entry");
+  entry.innerHTML = `
+    <h3 style="color:${color}">${song}</h3>
+    <p>${reflection}</p>
+  `;
+  journalEntries.prepend(entry);
+
+  journalForm.reset();
+});
+
 
 // =================== CLEAR RESULTS ===================
 function showClearButton() {
