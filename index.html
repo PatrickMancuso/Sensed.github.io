@@ -6,12 +6,14 @@
   <title>Sensed — Music Memory Journal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <header>
     <div class="logo">
       <h1>Sensed</h1>
       <p class="subtitle">Where music meets memory, color, and emotion.</p>
     </div>
+
     <nav>
       <button class="tab active" data-tab="search">Search</button>
       <button class="tab" data-tab="journal">Journal</button>
@@ -21,42 +23,71 @@
   </header>
 
   <main>
-    <!-- Search Tab -->
-    <section id="search" class="tab-content active">
-      <h2>Search for a song and reflect on how it makes you feel.</h2>
-      <form id="searchForm">
-        <input type="text" id="songInput" placeholder="Search for a song or artist..." required />
-        <button type="submit">🔍</button>
-      </form>
-      <div id="results"></div>
-    </section>
+    <!-- Left Side Panel -->
+    <div class="side-panel">
+      <h3>Recent Reflections</h3>
+      <p>Coming soon — view others’ song memories.</p>
+    </div>
 
-    <!-- Journal Tab -->
-    <section id="journal" class="tab-content">
-      <h2>Log your feelings</h2>
-      <form id="journalForm">
-        <input type="text" id="songTitle" placeholder="Song Title" required />
-        <textarea id="reflection" placeholder="How does this song make you feel?" required></textarea>
-        <label for="color">Pick a color that fits:</label>
-        <input type="color" id="color" value="#a78bfa" />
-        <button type="submit">Save Entry</button>
-      </form>
-      <div id="journalEntries"></div>
-    </section>
+    <!-- Center Content -->
+    <div class="content-area">
+      <!-- Search Tab -->
+      <section id="search" class="tab-content active">
+        <h2>Search for a song and reflect on how it makes you feel.</h2>
+        <form id="searchForm">
+          <input
+            type="text"
+            id="songInput"
+            placeholder="Search for a song or artist..."
+            required
+          />
+          <button type="submit">🔍</button>
+        </form>
+        <div id="results"></div>
+      </section>
 
-    <!-- Community Tab -->
-    <section id="community" class="tab-content">
-      <h2>Community Feed</h2>
-      <div id="communityFeed">
-        <p>Coming soon — see what others feel about their favorite songs.</p>
-      </div>
-    </section>
+      <!-- Journal Tab -->
+      <section id="journal" class="tab-content">
+        <h2>Log your feelings</h2>
+        <form id="journalForm">
+          <input
+            type="text"
+            id="songTitle"
+            placeholder="Song Title"
+            required
+          />
+          <textarea
+            id="reflection"
+            placeholder="How does this song make you feel?"
+            required
+          ></textarea>
+          <label for="color">Pick a color that fits:</label>
+          <input type="color" id="color" value="#a78bfa" />
+          <button type="submit">Save Entry</button>
+        </form>
+        <div id="journalEntries"></div>
+      </section>
 
-    <!-- Profile Tab -->
-    <section id="profile" class="tab-content">
-      <h2>Your Profile</h2>
-      <p>Feature in progress. Customize your space soon!</p>
-    </section>
+      <!-- Community Tab -->
+      <section id="community" class="tab-content">
+        <h2>Community Feed</h2>
+        <div id="communityFeed">
+          <p>Coming soon — see what others feel about their favorite songs.</p>
+        </div>
+      </section>
+
+      <!-- Profile Tab -->
+      <section id="profile" class="tab-content">
+        <h2>Your Profile</h2>
+        <p>Feature in progress. Customize your space soon!</p>
+      </section>
+    </div>
+
+    <!-- Right Side Panel -->
+    <div class="side-panel">
+      <h3>Color Moods</h3>
+      <p>Coming soon — explore emotion colors.</p>
+    </div>
   </main>
 
   <footer>
