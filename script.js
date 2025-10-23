@@ -184,8 +184,6 @@ journalForm?.addEventListener("submit", (e) => {
 });
 
 // =================== POPULAR PICKS ===================
-// =================== POPULAR PICKS ===================
-const popularData = [
   const popularData = [
 
   { type: "album", name: "Random Access Memories", artist: "Daft Punk" },
