@@ -183,6 +183,70 @@ journalForm?.addEventListener("submit", (e) => {
   journalForm.reset();
 });
 
+// =================== POPULAR PICKS ===================
+const popularData = [
+  {
+    type: "artist",
+    name: "Daft Punk",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/91b78e3f16b04c8b9d2e6c392e31e02b.jpg"
+  },
+  {
+    type: "artist",
+    name: "Prince",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png"
+  },
+  {
+    type: "album",
+    name: "Random Access Memories",
+    artist: "Daft Punk",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/cd1e399b719b47a6aa4e2edc56e0a1a1.png"
+  },
+  {
+    type: "album",
+    name: "Purple Rain",
+    artist: "Prince",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/08b8bdb8d5c847edba04b5e3cdb47a91.png"
+  },
+  {
+    type: "artist",
+    name: "Stevie Wonder",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/5c1b863d9f9447c1af8ac1ed8e7dc006.png"
+  },
+  {
+    type: "artist",
+    name: "Chic",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png"
+  },
+];
+
+function displayPopularBubbles() {
+  const container = document.getElementById("popular-bubbles");
+  const sizes = ["80px", "100px", "120px", "140px"]; // varied bubble sizes
+
+  popularData.forEach((item) => {
+    const bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    const size = sizes[Math.floor(Math.random() * sizes.length)];
+    bubble.style.width = size;
+    bubble.style.height = size;
+
+    bubble.innerHTML = `
+      <img src="${item.image}" alt="${item.name}">
+      <span>${item.name}</span>
+    `;
+
+    bubble.addEventListener("click", () => {
+      input.value = item.name;
+      searchType.value = item.type === "album" ? "album" : "track";
+      form.dispatchEvent(new Event("submit"));
+    });
+
+    container.appendChild(bubble);
+  });
+}
+
+// Initialize bubbles on load
+displayPopularBubbles();
 
 // =================== CLEAR RESULTS ===================
 function showClearButton() {
