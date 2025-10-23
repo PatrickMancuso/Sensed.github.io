@@ -184,23 +184,43 @@ journalForm?.addEventListener("submit", (e) => {
 });
 
 // =================== POPULAR PICKS ===================
-  const popularData = [
-
-  { type: "album", name: "Random Access Memories", artist: "Daft Punk" },
-  { type: "album", name: "Purple Rain", artist: "Prince" },
-  { type: "album", name: "Songs in the Key of Life", artist: "Stevie Wonder" },
-  { type: "album", name: "Kind of Blue", artist: "Miles Davis" },
-  { type: "album", name: "Maggot Brain", artist: "Funkadelic" },
-  { type: "album", name: "Love Deluxe", artist: "Sade" },
-  { type: "album", name: "Thriller", artist: "Michael Jackson" },
-  { type: "album", name: "Back to Black", artist: "Amy Winehouse" },
-  { type: "album", name: "The Dark Side of the Moon", artist: "Pink Floyd" },
-  { type: "album", name: "Superfly", artist: "Curtis Mayfield" },
-  { type: "album", name: "Innervisions", artist: "Stevie Wonder" },
-  { type: "album", name: "Off the Wall", artist: "Michael Jackson" },
-  { type: "album", name: "Songs in A Minor", artist: "Alicia Keys" }
+const popularAlbums = [
+  {
+    name: "Random Access Memories",
+    artist: "Daft Punk",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/cd1e399b719b47a6aa4e2edc56e0a1a1.png"
+  },
+  {
+    name: "Purple Rain",
+    artist: "Prince",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/08b8bdb8d5c847edba04b5e3cdb47a91.png"
+  },
+  {
+    name: "Songs in the Key of Life",
+    artist: "Stevie Wonder",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/4d3e8b9c2c724a4f9c9b6d0c4e45cde1.png"
+  },
+  {
+    name: "Chic",
+    artist: "Chic",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png"
+  },
+  {
+    name: "Thriller",
+    artist: "Michael Jackson",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/0c7d1f0a9b0045dabc1234567890abcd.png"
+  },
+  {
+    name: "Back to Black",
+    artist: "Amy Winehouse",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/1a2b3c4d5e6f7g8h9i0j.png"
+  },
+  {
+    name: "The Dark Side of the Moon",
+    artist: "Pink Floyd",
+    image: "https://lastfm.freetls.fastly.net/i/u/300x300/abc123def456ghi789jkl.png"
+  }
 ];
-
   
 ];
 
