@@ -243,6 +243,61 @@ main {
 }
 
 /* =========================================
+   POPULAR BUBBLES
+========================================= */
+#popular-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+#popular-section h3 {
+  color: #a78bfa;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+#popular-bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.bubble {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+.bubble:hover {
+  transform: scale(1.1);
+}
+
+.bubble img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bubble span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.8rem;
+  text-align: center;
+  border-radius: 0 0 50% 50%;
+}
+
+
+/* =========================================
    SEARCH RESULTS
 ========================================= */
 #results {
