@@ -186,12 +186,24 @@ journalForm?.addEventListener("submit", (e) => {
 // =================== POPULAR PICKS ===================
 // =================== POPULAR PICKS ===================
 const popularData = [
-  { type: "artist", name: "Daft Punk" },
-  { type: "artist", name: "Prince" },
+  const popularData = [
+
   { type: "album", name: "Random Access Memories", artist: "Daft Punk" },
   { type: "album", name: "Purple Rain", artist: "Prince" },
-  { type: "artist", name: "Stevie Wonder" },
-  { type: "artist", name: "Chic" },
+  { type: "album", name: "Songs in the Key of Life", artist: "Stevie Wonder" },
+  { type: "album", name: "Kind of Blue", artist: "Miles Davis" },
+  { type: "album", name: "Maggot Brain", artist: "Funkadelic" },
+  { type: "album", name: "Love Deluxe", artist: "Sade" },
+  { type: "album", name: "Thriller", artist: "Michael Jackson" },
+  { type: "album", name: "Back to Black", artist: "Amy Winehouse" },
+  { type: "album", name: "The Dark Side of the Moon", artist: "Pink Floyd" },
+  { type: "album", name: "Superfly", artist: "Curtis Mayfield" },
+  { type: "album", name: "Innervisions", artist: "Stevie Wonder" },
+  { type: "album", name: "Off the Wall", artist: "Michael Jackson" },
+  { type: "album", name: "Songs in A Minor", artist: "Alicia Keys" }
+];
+
+  
 ];
 
 async function displayPopularBubbles() {
