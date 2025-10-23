@@ -184,78 +184,36 @@ journalForm?.addEventListener("submit", (e) => {
 });
 
 // =================== POPULAR PICKS ===================
+// =================== POPULAR PICKS ===================
 const popularAlbums = [
-  {
-    name: "Random Access Memories",
-    artist: "Daft Punk",
-    image: "https://lastfm.freetls.fastly.net/i/u/300x300/cd1e399b719b47a6aa4e2edc56e0a1a1.png"
-  },
-  {
-    name: "Purple Rain",
-    artist: "Prince",
-    image: "https://lastfm.freetls.fastly.net/i/u/300x300/08b8bdb8d5c847edba04b5e3cdb47a91.png"
-  },
-  {
-    name: "Songs in the Key of Life",
-    artist: "Stevie Wonder",
-    image: "https://lastfm.freetls.fastly.net/i/u/300x300/4d3e8b9c2c724a4f9c9b6d0c4e45cde1.png"
-  },
-  {
-    name: "Chic",
-    artist: "Chic",
-    image: "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png"
-  },
-  {
-    name: "Thriller",
-    artist: "Michael Jackson",
-    image: "https://lastfm.freetls.fastly.net/i/u/300x300/0c7d1f0a9b0045dabc1234567890abcd.png"
-  },
-  {
-    name: "Back to Black",
-    artist: "Amy Winehouse",
-    image: "https://lastfm.freetls.fastly.net/i/u/300x300/1a2b3c4d5e6f7g8h9i0j.png"
-  },
-  {
-    name: "The Dark Side of the Moon",
-    artist: "Pink Floyd",
-    image: "https://lastfm.freetls.fastly.net/i/u/300x300/abc123def456ghi789jkl.png"
-  }
-];
-  
+  { type: "album", name: "Random Access Memories", artist: "Daft Punk", image: "https://lastfm.freetls.fastly.net/i/u/300x300/cd1e399b719b47a6aa4e2edc56e0a1a1.png" },
+  { type: "album", name: "Purple Rain", artist: "Prince", image: "https://lastfm.freetls.fastly.net/i/u/300x300/08b8bdb8d5c847edba04b5e3cdb47a91.png" },
+  { type: "album", name: "Songs in the Key of Life", artist: "Stevie Wonder", image: "https://lastfm.freetls.fastly.net/i/u/300x300/4d3e8b9c2c724a4f9c9b6d0c4e45cde1.png" },
+  { type: "album", name: "Chic", artist: "Chic", image: "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png" },
+  { type: "album", name: "Thriller", artist: "Michael Jackson", image: "https://lastfm.freetls.fastly.net/i/u/300x300/0c7d1f0a9b0045dabc1234567890abcd.png" },
+  { type: "album", name: "Back to Black", artist: "Amy Winehouse", image: "https://lastfm.freetls.fastly.net/i/u/300x300/1a2b3c4d5e6f7g8h9i0j.png" },
+  { type: "album", name: "The Dark Side of the Moon", artist: "Pink Floyd", image: "https://lastfm.freetls.fastly.net/i/u/300x300/abc123def456ghi789jkl.png" }
 ];
 
 async function displayPopularBubbles() {
   const container = document.getElementById("popular-bubbles");
   const sizes = ["80px", "100px", "120px", "140px"];
 
-  for (const item of popularData) {
+  for (const item of popularAlbums) {  // <-- use popularAlbums here
     const bubble = document.createElement("div");
     bubble.classList.add("bubble");
     const size = sizes[Math.floor(Math.random() * sizes.length)];
     bubble.style.width = size;
     bubble.style.height = size;
 
-    // Placeholder while loading
+    // Use provided image or placeholder
+    const imgSrc = item.image || "https://via.placeholder.com/150x150?text=No+Image";
+
     bubble.innerHTML = `
-      <img src="https://via.placeholder.com/150x150?text=Loading..." alt="${item.name}">
+      <img src="${imgSrc}" alt="${item.name}">
       <span>${item.name}</span>
     `;
     container.appendChild(bubble);
-
-    // Fetch real image
-    let imageUrl = "";
-    if (item.type === "album") {
-      imageUrl = await fetchHighResAlbumArt(item.artist, item.name);
-    } else {
-      imageUrl = await fetchArtistImage(item.name);
-    }
-
-    // Fallback to a placeholder if no image found
-    if (!imageUrl) {
-      imageUrl = "https://via.placeholder.com/150x150?text=No+Image";
-    }
-
-    bubble.querySelector("img").src = imageUrl;
 
     // Allow clicking to search
     bubble.addEventListener("click", () => {
@@ -268,6 +226,7 @@ async function displayPopularBubbles() {
 
 // Initialize bubbles on load
 displayPopularBubbles();
+
 
 
 // =================== CLEAR RESULTS ===================
