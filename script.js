@@ -252,3 +252,102 @@ function showClearButton() {
     input.value = "";
   });
 }
+
+// =================== LOCAL STORAGE JOURNAL SYSTEM ===================
+
+// Load saved reflections on startup
+window.addEventListener("DOMContentLoaded", loadReflections);
+
+function loadReflections() {
+  const saved = JSON.parse(localStorage.getItem("reflections")) || [];
+  updateRecentReflections(saved);
+  displayJournalEntries(saved);
+}
+
+// Handle new journal entry submission
+journalForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const song = document.getElementById("songTitle").value.trim();
+  const reflection = document.getElementById("reflection").value.trim();
+  const color = document.getElementById("color").value;
+  if (!song || !reflection) return;
+
+  const newEntry = {
+    id: Date.now(),
+    song,
+    reflection,
+    color,
+    date: new Date().toLocaleDateString(),
+  };
+
+  const saved = JSON.parse(localStorage.getItem("reflections")) || [];
+  saved.unshift(newEntry);
+  localStorage.setItem("reflections", JSON.stringify(saved));
+
+  displayJournalEntries(saved);
+  updateRecentReflections(saved);
+  journalForm.reset();
+});
+
+// =================== DISPLAY JOURNAL ENTRIES ===================
+function displayJournalEntries(entries) {
+  journalEntries.innerHTML = "";
+  entries.forEach((entry) => {
+    const div = document.createElement("div");
+    div.classList.add("entry");
+    div.innerHTML = `
+      <h3 style="color:${entry.color}">${entry.song}</h3>
+      <p>${entry.reflection}</p>
+      <small>${entry.date}</small>
+    `;
+    journalEntries.appendChild(div);
+  });
+}
+
+// =================== RECENT REFLECTIONS PANEL ===================
+function updateRecentReflections(entries) {
+  const panel = document.querySelectorAll(".side-panel")[0]; // left panel
+  panel.innerHTML = "<h3>Recent Reflections</h3>";
+
+  if (!entries.length) {
+    panel.innerHTML += `<p>No reflections yet. Start your first in the Journal tab!</p>`;
+    return;
+  }
+
+  const list = document.createElement("ul");
+  list.style.listStyle = "none";
+  list.style.padding = "0";
+  entries.slice(0, 5).forEach((entry) => {
+    const li = document.createElement("li");
+    li.style.marginBottom = "0.6rem";
+    li.innerHTML = `
+      <button class="reflection-link" 
+              style="background:none;border:none;color:${entry.color};cursor:pointer;text-decoration:underline;">
+        ${entry.song}
+      </button>
+    `;
+    li.querySelector("button").addEventListener("click", () => openReflection(entry));
+    list.appendChild(li);
+  });
+  panel.appendChild(list);
+}
+
+// =================== OPEN REFLECTION DETAIL ===================
+function openReflection(entry) {
+  // Switch to journal tab
+  tabs.forEach((t) => t.classList.remove("active"));
+  tabContents.forEach((c) => c.classList.remove("active"));
+
+  document.querySelector("[data-tab='journal']").classList.add("active");
+  document.getElementById("journal").classList.add("active");
+
+  // Populate journal view area with entry details
+  journalEntries.innerHTML = `
+    <div class="entry" style="border:2px solid ${entry.color};">
+      <h3 style="color:${entry.color}">${entry.song}</h3>
+      <p>${entry.reflection}</p>
+      <small>${entry.date}</small>
+    </div>
+  `;
+}
+
