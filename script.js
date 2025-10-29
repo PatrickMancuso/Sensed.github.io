@@ -36,6 +36,7 @@ async function searchAlbums(query) {
   const data = await res.json();
   const albums = data.results?.albummatches?.album || [];
   displayAlbums(albums);
+  showClearButton(); 
 }
 
 // =================== TRACK SEARCH ===================
